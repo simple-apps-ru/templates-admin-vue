@@ -1,5 +1,9 @@
 # Vue Admin Template
 
+## Components
+
+[Ant Design Vue](https://2x.antdv.com/components)
+
 ## Project setup
 
 ```
