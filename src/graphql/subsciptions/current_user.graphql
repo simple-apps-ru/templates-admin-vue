@@ -1,0 +1,5 @@
+subscription currentUser($userId: uuid!) {
+  user: users_by_pk(id: $userId) {
+    ...CurrentUser
+  }
+}

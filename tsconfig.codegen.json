@@ -1,0 +1,34 @@
+{
+    "compilerOptions": {
+        "incremental": true,
+        "baseUrl": ".",
+        "outDir": "codegen/dist",
+        "rootDir": "codegen",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "importHelpers": true,
+        "experimentalDecorators": true,
+        "module": "CommonJS",
+        "target": "es2018",
+        "lib": [
+            "es6",
+            "esnext",
+            "es2015",
+            "dom"
+        ],
+        "suppressImplicitAnyIndexErrors": true,
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "sourceMap": true,
+        "declaration": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true
+    },
+    "include": [
+        "codegen"
+    ]
+}

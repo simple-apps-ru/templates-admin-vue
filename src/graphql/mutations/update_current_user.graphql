@@ -1,0 +1,18 @@
+mutation updateCurrentUser(
+  $userId: uuid!
+  $user: users_set_input!
+  $account: auth_accounts_set_input!
+) {
+  user: update_users_by_pk(pk_columns: { id: $userId }, _set: $user) {
+    ...CurrentUser
+  }
+
+  account: update_auth_accounts(
+    where: { user_id: { _eq: $userId } }
+    _set: $account
+  ) {
+    returning {
+      ...UserAccount
+    }
+  }
+}

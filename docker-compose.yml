@@ -1,0 +1,27 @@
+version: '3.6'
+services:
+  front:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    container_name: lms-front
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.lms-front.entrypoints=http'
+      - 'traefik.http.routers.lms-front.rule=Host(`lms.devhoster.ru`)'
+      - 'traefik.http.middlewares.lms-front-https-redirect.redirectscheme.scheme=https'
+      - 'traefik.http.routers.lms-front.middlewares=lms-front-https-redirect'
+      - 'traefik.http.routers.lms-front-secure.entrypoints=https'
+      - 'traefik.http.routers.lms-front-secure.rule=Host(`lms.devhoster.ru`)'
+      - 'traefik.http.routers.lms-front-secure.tls=true'
+      - 'traefik.http.routers.lms-front-secure.tls.certresolver=http'
+      - 'traefik.http.routers.lms-front-secure.service=lms-front'
+      - 'traefik.http.services.lms-front.loadbalancer.server.port=80'
+    networks:
+      - net
+
+networks:
+  net:
+    external: true

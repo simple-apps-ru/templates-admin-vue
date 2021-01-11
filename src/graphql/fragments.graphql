@@ -1,0 +1,21 @@
+fragment User on users {
+  __typename
+  id
+  display_name
+  avatar_url
+  phone_number
+  account {
+    ...UserAccount
+  }
+}
+
+fragment UserAccount on auth_accounts {
+  __typename
+  id
+  email
+  user_id
+}
+
+fragment CurrentUser on users {
+  ...User
+}

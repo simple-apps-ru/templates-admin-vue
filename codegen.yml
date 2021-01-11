@@ -1,0 +1,54 @@
+schema:
+  - schema.graphql
+documents: ./src/graphql/**/*.graphql
+generates:
+  ./src/sdk/types.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+    config:
+      scalars:
+        uuid: string
+        date: Date
+        timestamptz: Date
+        citext: string
+        jsonb: '{ [key: string]: any } | null'
+        numeric: number
+        bigint: string
+        geometry: "{ type: 'Point', coordinates: number[] }"
+
+  ./src/sdk/operations.ts:
+    plugins:
+      - typescript-document-nodes
+    config:
+      fragmentSuffix: Fragment
+      nameSuffix: Document
+
+  ./src/sdk/hooks.ts:
+    plugins:
+      - ./codegen/dist/vue-apollo
+    config:
+      documentMode: external
+      importDocumentNodeExternallyFrom: ./operations.ts
+      importOperationTypesFrom: Operations
+      documentVariableSuffix: Document
+      vueCompositionApiImportFrom: vue
+    preset: import-types
+    presetConfig:
+      typesPath: ./types
+
+  # ./src/sdk/wrapper.ts:
+  #   plugins:
+  #     - ./codegen/dist/graphql-request
+  #   config:
+  #     documentMode: external
+  #     importDocumentNodeExternallyFrom: ./operations.ts
+  #     importOperationTypesFrom: Operations
+  #     documentVariableSuffix: Document
+  #   preset: import-types
+  #   presetConfig:
+  #     typesPath: ./types
+
+hooks:
+  afterAllFileWrite:
+    - prettier --write
