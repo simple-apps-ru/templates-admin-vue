@@ -60,7 +60,7 @@ export default defineComponent({
       <>
         <h1>Список пользователей</h1>
 
-        <Table columns={columns} dataSource={data}></Table>
+        <Table columns={columns} dataSource={data} scroll={{ x: 800 }}></Table>
       </>
     )
   }

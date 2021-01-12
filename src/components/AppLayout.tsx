@@ -1,15 +1,18 @@
-import { auth } from '@/plugins/api'
+import { auth, currentUser } from '@/plugins/api'
 import router from '@/router'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  LogoutOutlined
+  LogoutOutlined,
+  CaretDownOutlined
 } from '@ant-design/icons-vue'
-import { Button, Layout, Row, Col } from 'ant-design-vue'
+import { Button, Layout, Row, Col, Menu, Dropdown } from 'ant-design-vue'
 import { defineComponent, ref, onMounted, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import styled from 'vue3-styled-components'
 import AppMenu from './AppMenu'
+import Avatar from './ui/Avatar'
+import MenuItemButton from './ui/MenuItemButton'
 
 export default defineComponent({
   setup(_, { slots }) {
@@ -17,8 +20,8 @@ export default defineComponent({
     const collapsedWidth = ref(80)
 
     const calculate = () => {
-      collapsedWidth.value = window.innerWidth < 1024 ? 0 : 80
-      collapsed.value = window.innerWidth < 1024
+      collapsedWidth.value = window.innerWidth < 992 ? 0 : 80
+      collapsed.value = window.innerWidth < 992
     }
     calculate()
 
@@ -31,7 +34,7 @@ export default defineComponent({
     })
 
     return () => (
-      <Layout>
+      <MainLayout>
         <Sidebar
           collapsed={collapsed.value}
           collapsible
@@ -44,12 +47,13 @@ export default defineComponent({
           </LogoContainer>
           <AppMenu />
         </Sidebar>
-        <Layout>
+        <ContentLayout>
           <Header>
             <Row justify="space-between" gutter={24}>
               <Col>
                 <Button
-                  type="link"
+                  type="primary"
+                  ghost
                   onClick={() => (collapsed.value = !collapsed.value)}
                 >
                   {collapsed.value ? (
@@ -60,19 +64,55 @@ export default defineComponent({
                 </Button>
               </Col>
 
-              <Col>
-                <Button onClick={() => auth.logout()}>
-                  <LogoutOutlined />
-                </Button>
-              </Col>
+              {currentUser.value && (
+                <Col>
+                  <Avatar user={currentUser.value} size={36} />
+                  <Dropdown
+                    trigger={['click']}
+                    overlayStyle={{ paddingTop: '10px' }}
+                    placement="bottomRight"
+                    v-slots={{
+                      overlay: () => (
+                        <Menu>
+                          <MenuItemButton
+                            onClick={() => auth.logout()}
+                            icon={() => <LogoutOutlined />}
+                          >
+                            Выход
+                          </MenuItemButton>
+                        </Menu>
+                      )
+                    }}
+                  >
+                    <Button
+                      type="link"
+                      size="small"
+                      shape="circle"
+                      style="color: currentColor; margin-left: 12px;height: 36px;"
+                    >
+                      <CaretDownOutlined />
+                    </Button>
+                  </Dropdown>
+                </Col>
+              )}
             </Row>
           </Header>
           <Content>{slots.default && slots.default()}</Content>
-        </Layout>
-      </Layout>
+        </ContentLayout>
+      </MainLayout>
     )
   }
 })
+
+const MainLayout = styled(Layout)`
+  overflow: hidden;
+`
+
+const ContentLayout = styled(Layout)`
+  @media (max-width: 991px) {
+    min-width: 100vw;
+  }
+`
 
 const LogoContainer = styled.div`
   padding: 25px 15px;
@@ -96,9 +136,16 @@ const Sidebar = styled(Layout.Sider)`
 const Header = styled(Layout.Header)`
   background-color: #fafafa !important;
   padding: 0 25px !important;
+
+  @media (max-width: 575px) {
+    padding: 0 15px !important;
+  }
 `
 
 const Content = styled(Layout.Content)`
   background-color: #fff;
   padding: 25px;
+  @media (max-width: 575px) {
+    padding: 15px;
+  }
 `
