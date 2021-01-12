@@ -1,11 +1,12 @@
-import { ConfigProvider } from 'ant-design-vue'
+import { ConfigProvider, Spin } from 'ant-design-vue'
 import ruRU from 'ant-design-vue/es/locale/ru_RU'
-import { computed, defineComponent, ref, watch } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import { RouterView } from 'vue-router'
-import { ThemeProvider } from 'vue3-styled-components'
+import styled, { ThemeProvider } from 'vue3-styled-components'
+import AppLayout from './components/AppLayout'
+import useServiceWork from './hooks/serviceWorker'
 import { auth, isAuthWithUser, subscribeToCurrentUser } from './plugins/api'
 import router from './router'
-import useServiceWork from './hooks/serviceWorker'
 
 export default defineComponent({
   name: 'App',
@@ -23,8 +24,27 @@ export default defineComponent({
 
     return () => (
       <ConfigProvider locale={ruRU}>
-        <ThemeProvider theme={{}}>APP</ThemeProvider>
+        <ThemeProvider theme={{}}>
+          {withLayout.value ? (
+            <AppLayout>
+              <RouterView />
+            </AppLayout>
+          ) : auth.isAuth.value ? (
+            <LoadingWrapper>
+              <Spin size="large" />
+            </LoadingWrapper>
+          ) : (
+            <RouterView />
+          )}
+        </ThemeProvider>
       </ConfigProvider>
     )
   }
 })
+
+const LoadingWrapper = styled.div`
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`

@@ -4,21 +4,21 @@ services:
     build: .
     restart: unless-stopped
     env_file: .env
-    container_name: lms-front
+    container_name: CONTAINER_NAME-front
     volumes:
       - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.lms-front.entrypoints=http'
-      - 'traefik.http.routers.lms-front.rule=Host(`lms.devhoster.ru`)'
-      - 'traefik.http.middlewares.lms-front-https-redirect.redirectscheme.scheme=https'
-      - 'traefik.http.routers.lms-front.middlewares=lms-front-https-redirect'
-      - 'traefik.http.routers.lms-front-secure.entrypoints=https'
-      - 'traefik.http.routers.lms-front-secure.rule=Host(`lms.devhoster.ru`)'
-      - 'traefik.http.routers.lms-front-secure.tls=true'
-      - 'traefik.http.routers.lms-front-secure.tls.certresolver=http'
-      - 'traefik.http.routers.lms-front-secure.service=lms-front'
-      - 'traefik.http.services.lms-front.loadbalancer.server.port=80'
+      - 'traefik.http.routers.CONTAINER_NAME-front.entrypoints=http'
+      - 'traefik.http.routers.CONTAINER_NAME-front.rule=Host(`DOMAIN`)'
+      - 'traefik.http.middlewares.CONTAINER_NAME-front-https-redirect.redirectscheme.scheme=https'
+      - 'traefik.http.routers.CONTAINER_NAME-front.middlewares=CONTAINER_NAME-front-https-redirect'
+      - 'traefik.http.routers.CONTAINER_NAME-front-secure.entrypoints=https'
+      - 'traefik.http.routers.CONTAINER_NAME-front-secure.rule=Host(`DOMAIN`)'
+      - 'traefik.http.routers.CONTAINER_NAME-front-secure.tls=true'
+      - 'traefik.http.routers.CONTAINER_NAME-front-secure.tls.certresolver=http'
+      - 'traefik.http.routers.CONTAINER_NAME-front-secure.service=CONTAINER_NAME-front'
+      - 'traefik.http.services.CONTAINER_NAME-front.loadbalancer.server.port=80'
     networks:
       - net
 
