@@ -16,7 +16,7 @@ export default defineComponent({
   },
   setup(props) {
     return () =>
-      !props.user.avatar_url ? (
+      props.user.avatar_url ? (
         <Avatar
           size={props.size}
           src={storage.getUrl(props.user.avatar_url as string)}
